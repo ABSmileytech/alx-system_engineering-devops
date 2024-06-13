@@ -1,12 +1,2 @@
 #!/bin/bash
-# Script to list all files (including hidden ones) in the current directory, parent directory, and /boot directory in long format
-
-# List files in the current directory
-ls -la
-
-# List files in the parent directory
-ls -la ..
-
-# List files in the /boot directory
-ls -la /boot
-
+ (ls -la && ls -la .. && ls -la /boot)
