@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -maxdepth 1 -print0 | sort -zV | xargs -0 -n1 basename | paste -sd, -
+find . -maxdepth 1 -print0 | sort -zV | xargs -0 -n1 basename | paste -sd, - | sed 's/,/\n/g'
