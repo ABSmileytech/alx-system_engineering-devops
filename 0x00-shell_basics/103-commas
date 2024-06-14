@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -maxdepth 1 -print0 | sort -zV | xargs -0 -I{} echo -n "{}, " | head -c -2; echo
+(shell-command "echo -n . , .. , $(ls -Ap | grep -v /$ | sort -d | tr '\n' ,) $(ls -d */ | sort -d | tr '\n' ,) | sed 's/,/, /g' | sed 's/, $/\\n/'")
