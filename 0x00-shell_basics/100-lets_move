@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -type f -name "[[:upper:]]*" & mv -t /tmp/u {} \
+for file in [A-Z]*; do mv "$file" /tmp/u; done
