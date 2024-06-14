@@ -1,0 +1,2 @@
+#!/bin/bash
+ls -1v --group-directories-first | sed -e 's/$/,/' -e '/\/$/ s/,$//'
