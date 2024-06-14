@@ -1,2 +1,2 @@
 #!/bin/bash
-(shell-command "echo -n . , .. , $(ls -Ap | grep -v /$ | sort -d | tr '\n' ,) $(ls -d */ | sort -d | tr '\n' ,) | sed 's/,/, /g' | sed 's/, $/\\n/'")
+"echo -n . , .. , $(ls -Ap | grep -v /$ | sort -d | tr '\n' ,) $(ls -d */ | sort -d | tr '\n' ,) | sed 's/,/, /g' | sed 's/, $/\\n/'"
