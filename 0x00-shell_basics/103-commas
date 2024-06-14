@@ -1,2 +1,3 @@
 #!/bin/bash
-printf "%s, " $(ls -v1pa | grep -v / | sort --sort=version; ls -d . .. */)
+echo "./, ../," $(ls -ap -A | sort -f | awk '{if($0 != "." && $0 != ".."){print}}' | tr '\n' ',' | sed 's/,/, /g' | sed 's/, $/\n/')
+
