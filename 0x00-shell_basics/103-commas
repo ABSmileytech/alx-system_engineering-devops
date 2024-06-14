@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -1v --group-directories-first | sed -e 's/$/,/' -e '/\/$/ s/,$//'
+find . -maxdepth 1 -print0 | sort -zV | xargs -0 -n1 basename | paste -sd, -
