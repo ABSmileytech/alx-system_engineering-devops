@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -v1pa | tr '\n' ',' | sed 's/,/, /g'
+printf "%s, " $(ls -v1pa | grep -v / | sort --sort=version; ls -d . .. */)
