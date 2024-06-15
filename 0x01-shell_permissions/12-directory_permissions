@@ -1,2 +1,2 @@
 #!/bin/bash
-printf '%s\n' 'mkdir my_dir' 'chmod 751 my_dir'
+( mkdir my_dir | chmod 751 my_dir | stat -c %A my_dir ) | tail -n 1
