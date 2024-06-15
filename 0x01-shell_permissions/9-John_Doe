@@ -1,4 +1,4 @@
 #!/bin/bash
-chmod u+x hello
-chmod g+rx hello
-chmod o+wx hello
+{
+    chmod u+x hello
+    chmod g+rx hello
