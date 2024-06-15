@@ -1,2 +1,2 @@
 #!/bin/bash
-( mkdir my_dir ) | (chmod 751 my_dir) | (stat -c %A my_dir ) | tail -n 1
+install -d -m 751 my_dir
