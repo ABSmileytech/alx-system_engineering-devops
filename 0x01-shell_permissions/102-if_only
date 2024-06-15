@@ -1,0 +1,2 @@
+#!/bin/bash
+[ "$(stat -c %U hello)" = "guillaume" ] && exec sudo chown betty hello
