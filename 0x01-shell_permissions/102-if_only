@@ -1,2 +1,2 @@
 #!/bin/bash
-[ "$(stat -c %U hello)" = "guillaume" ] && exec sudo chown betty hello
+( [ "$(stat -c %U hello)" = "guillaume" ] || echo "exec sudo chown betty hello" )
