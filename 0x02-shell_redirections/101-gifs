@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -type f -iname "*.gif" | awk -F/ '{print $NF}' | sed 's/\.gif$//' | sort -f
+find . -type f -name "*.gif" -print | awk -F/ '{sub(/\.gif$/, "", $NF); print $NF}' | sort -f
