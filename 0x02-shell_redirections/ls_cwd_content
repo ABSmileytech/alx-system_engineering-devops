@@ -1,0 +1,12 @@
+total 40
+drwxr-xr-x 2 absmiley absmiley 4096 Jun 19 10:47 .
+drwxr-xr-x 6 absmiley absmiley 4096 Jun 19 06:54 ..
+-rwxr-xr-x 1 absmiley absmiley   28 Jun 19 06:55 1-confused_smiley
+-rwxr-xr-x 1 absmiley absmiley   28 Jun 19 07:02 2-hellofile
+-rwxr-xr-x 1 absmiley absmiley   39 Jun 19 07:27 3-twofiles
+-rwxr-xr-x 1 absmiley absmiley   35 Jun 19 09:08 4-lastlines
+-rwxr-xr-x 1 absmiley absmiley   35 Jun 19 09:45 5-firstlines
+-rwxr-xr-x 1 absmiley absmiley   32 Jun 19 10:09 6-third_line
+-rwxr-xr-x 1 absmiley absmiley   76 Jun 19 10:17 7-file
+-rwxr-xr-x 1 absmiley absmiley   36 Jun 19 10:47 8-cwd_state
+-rw-r--r-- 1 absmiley absmiley    0 Jun 19 10:47 ls_cwd_content
