@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "%o\n" $(( $((5#$(echo $WATER | tr water 01234))) + $((5#$(echo $STIR | tr stir. 01234))) )) | tr 01234567 behlnort
+echo "$(echo $WATER | tr 'ewatr' '01234' | awk '{s=0; for(i=1;i<=NF;i++) s=s*5+$i; print s}') + $(echo $STIR | tr 'tir' '012' | awk '{s=0; for(i=1;i<=NF;i++) s=s*3+$i; print s}')" | bc | awk '{n=$1; res=""; b="bestchol"; while (n>0) {res=substr(b, n%length(b)+1, 1) res; n=int(n/length(b));} print res}'
