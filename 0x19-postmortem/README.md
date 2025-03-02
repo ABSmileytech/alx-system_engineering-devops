@@ -1,65 +1,64 @@
-# Postmortem
+**Postmortem: Web Stack Debugging Outage**
 
-Upon the release of ALX's System Engineering & DevOps project 0x19,
-approximately 06:00 West African Time (WAT) here in Nigeria, an outage occurred on an isolated
-Ubuntu 14.04 container running an Apache web server. GET requests on the server led to
-`500 Internal Server Error`'s, when the expected response was an HTML file defining a
-simple Holberton WordPress site.
+---
 
-## Debugging Process
+### **Issue Summary**
 
-Bug debugger Brennan (BDB... as in my actual initials... made that up on the spot, pretty
-good, huh?) encountered the issue upon opening the project and being, well, instructed to
-address it, roughly 19:20 PST. He promptly proceeded to undergo solving the problem.
+**Duration:** February 15, 2025, 10:30 AM - 12:45 PM UTC
 
-1. Checked running processes using `ps aux`. Two `apache2` processes - `root` and `www-data` -
-were properly running.
+**Impact:**
+- 70% of users experienced slow load times or inability to access the web application.
+- API requests were failing intermittently, causing issues with image uploads and compression processing.
+- Admin dashboard was inaccessible due to backend timeouts.
 
-2. Looked in the `sites-available` folder of the `/etc/apache2/` directory. Determined that
-the web server was serving content located in `/var/www/html/`.
+**Root Cause:**
+A database connection pool exhaustion caused by an unoptimized query, leading to cascading failures in the API services.
 
-3. In one terminal, ran `strace` on the PID of the `root` Apache process. In another, curled
-the server. Expected great things... only to be disappointed. `strace` gave no useful
-information.
+---
 
-4. Repeated step 3, except on the PID of the `www-data` process. Kept expectations lower this
-time... but was rewarded! `strace` revelead an `-1 ENOENT (No such file or directory)` error
-occurring upon an attempt to access the file `/var/www/html/wp-includes/class-wp-locale.phpp`.
+### **Timeline**
 
-5. Looked through files in the `/var/www/html/` directory one-by-one, using Vim pattern
-matching to try and locate the erroneous `.phpp` file extension. Located it in the
-`wp-settings.php` file. (Line 137, `require_once( ABSPATH . WPINC . '/class-wp-locale.php' );`).
+- **10:30 AM** - Monitoring alerts detected increased API response times.
+- **10:35 AM** - Engineers began investigating, assuming it was a temporary traffic spike.
+- **10:45 AM** - Users started reporting slow performance and upload failures.
+- **11:00 AM** - Database logs revealed a high number of unclosed connections.
+- **11:15 AM** - Misleading assumption: Increased server memory usage was causing the slowdown; restarted application servers.
+- **11:30 AM** - Issue persisted, escalated to the database team.
+- **11:45 AM** - Root cause identified: a long-running query causing connections to remain open.
+- **12:00 PM** - Query optimization and connection pool adjustments implemented.
+- **12:30 PM** - Services gradually recovered; continued monitoring.
+- **12:45 PM** - Full resolution confirmed, postmortem initiated.
 
-6. Removed the trailing `p` from the line.
+---
 
-7. Tested another `curl` on the server. 200 A-ok!
+### **Root Cause and Resolution**
 
-8. Wrote a Puppet manifest to automate fixing of the error.
+**Root Cause:**
+- A newly deployed feature introduced an inefficient database query.
+- The query did not properly utilize indexing, causing full table scans.
+- Open connections were not being properly closed, leading to connection pool exhaustion.
 
-## Summation
+**Resolution:**
+- Optimized the problematic query to leverage indexing and reduce execution time.
+- Increased the connection pool size to handle sudden spikes more effectively.
+- Implemented a timeout mechanism for long-running queries.
+- Deployed a hotfix and monitored system stability.
 
-In short, a typo. Gotta love'em. In full, the WordPress app was encountering a critical
-error in `wp-settings.php` when tyring to load the file `class-wp-locale.phpp`. The correct
-file name, located in the `wp-content` directory of the application folder, was
-`class-wp-locale.php`.
+---
 
-Patch involved a simple fix on the typo, removing the trailing `p`.
+### **Corrective and Preventative Measures**
 
-## Prevention
+**Improvements:**
+- Improve database query performance testing before deployment.
+- Enhance connection pool monitoring and alerting mechanisms.
+- Conduct regular audits on database indexing and query efficiency.
 
-This outage was not a web server error, but an application error. To prevent such outages
-moving forward, please keep the following in mind.
+**Action Items:**
+1. **Patch database queries** to avoid full table scans and improve indexing.
+2. **Implement automated query profiling** to catch inefficient queries before deployment.
+3. **Improve alerting mechanisms** to detect connection pool exhaustion earlier.
+4. **Run load tests** before deploying database-intensive features.
+5. **Add database connection auto-recovery mechanisms** to prevent future outages.
 
-* Test! Test test test. Test the application before deploying. This error would have arisen
-and could have been addressed earlier had the app been tested.
+This postmortem outlines the critical events, the root cause, and the steps taken to prevent a recurrence of the outage, ensuring better system resilience in the future.
 
-* Status monitoring. Enable some uptime-monitoring service such as
-[UptimeRobot](./https://uptimerobot.com/) to alert instantly upon outage of the website.
-
-Note that in response to this error, I wrote a Puppet manifest
-[0-strace_is_your_friend.pp](https://github.com/bdbaraban/holberton-system_engineering-devops/blob/master/0x17-web_stack_debugging_3/0-strace_is_your_friend.pp)
-to automate fixing of any such identitical errors should they occur in the future. The manifest
-replaces any `phpp` extensions in the file `/var/www/html/wp-settings.php` with `php`.
-
-But of course, it will never occur again, because we're programmers, and we never make
-errors! :wink:
